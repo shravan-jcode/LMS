@@ -12,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 import { useGetCourseDetailWithStatusQuery } from "@/features/api/purchaseApi";
 import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import React from "react";
-import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
 
 const CourseDetail = () => {
@@ -20,10 +19,21 @@ const CourseDetail = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetCourseDetailWithStatusQuery(courseId);
 
-  if (isLoading) return <h1 className="text-center mt-10 text-xl text-gray-900 dark:text-gray-100">Loading course details...</h1>;
-  if (isError) return <h1 className="text-center mt-10 text-xl text-red-500">Failed to load course details.</h1>;
+  if (isLoading)
+    return (
+      <h1 className="text-center mt-10 text-xl text-gray-900 dark:text-gray-100">
+        Loading course details...
+      </h1>
+    );
+  if (isError)
+    return (
+      <h1 className="text-center mt-10 text-xl text-red-500">
+        Failed to load course details.
+      </h1>
+    );
 
   const { course, purchased } = data;
+  const firstLecture = course?.lectures?.[0];
 
   const handleContinueCourse = () => {
     if (purchased) {
@@ -35,7 +45,9 @@ const CourseDetail = () => {
     <div className="space-y-8 max-w-7xl mx-auto px-4 md:px-8 py-10">
       {/* Course Header */}
       <div className="bg-gray-800 text-white rounded-lg shadow-md p-6 md:p-10 space-y-2 dark:bg-gray-950">
-        <h1 className="font-bold text-2xl md:text-4xl text-teal-400 dark:text-teal-400">{course?.courseTitle}</h1>
+        <h1 className="font-bold text-2xl md:text-4xl text-teal-400 dark:text-teal-400">
+          {course?.courseTitle}
+        </h1>
         <p className="text-gray-300 md:text-lg">{course?.subTitle || "Course Sub-title"}</p>
         <p className="text-sm">
           Created by{" "}
@@ -52,9 +64,12 @@ const CourseDetail = () => {
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Left Side: Description & Lectures */}
         <div className="w-full lg:w-2/3 space-y-6">
+          {/* Course Description */}
           <Card className="shadow-lg hover:shadow-2xl transition bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="space-y-4 p-6">
-              <h2 className="font-bold text-xl md:text-2xl text-gray-900 dark:text-gray-100">Course Description</h2>
+              <h2 className="font-bold text-xl md:text-2xl text-gray-900 dark:text-gray-100">
+                Course Description
+              </h2>
               <p
                 className="text-gray-700 dark:text-gray-300 text-sm md:text-base"
                 dangerouslySetInnerHTML={{ __html: course?.description || "" }}
@@ -62,10 +77,13 @@ const CourseDetail = () => {
             </CardContent>
           </Card>
 
+          {/* Lectures List */}
           <Card className="shadow-lg hover:shadow-2xl transition bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-gray-100">Course Content</CardTitle>
-              <CardDescription className="text-gray-500 dark:text-gray-400">{course?.lectures?.length || 0} lectures</CardDescription>
+              <CardDescription className="text-gray-500 dark:text-gray-400">
+                {course?.lectures?.length || 0} lectures
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {course?.lectures?.length > 0 ? (
@@ -95,23 +113,34 @@ const CourseDetail = () => {
         <div className="w-full lg:w-1/3 space-y-6">
           <Card className="shadow-lg hover:shadow-2xl transition bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <CardContent className="flex flex-col space-y-4 p-6">
-              <div className="w-full aspect-video rounded-md overflow-hidden">
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  url={course?.lectures?.[0]?.videoUrl || ""}
-                  controls
-                  light={course?.lectures?.[0]?.thumbnail || false}
-                  style={{ borderRadius: "8px" }}
-                />
+              {/* Video Preview */}
+              <div className="w-full aspect-video rounded-md overflow-hidden bg-black">
+                {firstLecture && (firstLecture.isPreviewFree || purchased) ? (
+                  <video
+                    src={firstLecture.videoUrl}
+                    poster={firstLecture.thumbnail || ""}
+                    controls
+                    className="w-full h-full object-cover rounded-md"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <p className="text-center text-gray-500 dark:text-gray-400">
+                    Preview not available
+                  </p>
+                )}
               </div>
               <h3 className="font-semibold text-lg md:text-xl text-gray-900 dark:text-gray-100">
-                {course?.lectures?.[0]?.lectureTitle || "Lecture Title"}
+                {firstLecture?.lectureTitle || "Lecture Title"}
               </h3>
+
               <Separator className="bg-gray-200 dark:bg-gray-700" />
+
               <div className="flex flex-col space-y-2">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Course Price</h2>
-                <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">₹{course?.coursePrice}</p>
+                <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                  ₹{course?.coursePrice}
+                </p>
               </div>
             </CardContent>
             <CardFooter className="flex justify-center p-4">

@@ -26,6 +26,7 @@ const MEDIA_API = "http://localhost:8080/api/v1/media";
 const LectureTab = () => {
   const [lectureTitle, setLectureTitle] = useState("");
   const [uploadVideoInfo, setUploadVideoInfo] = useState(null);
+  const [uploadPdfInfo, setUploadPdfInfo] = useState(null);
   const [isFree, setIsFree] = useState(false);
   const [mediaProgress, setMediaProgress] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -41,6 +42,7 @@ const LectureTab = () => {
       setLectureTitle(lecture.lectureTitle);
       setIsFree(lecture.isPreviewFree);
       setUploadVideoInfo(lecture.videoInfo);
+      setUploadPdfInfo(lecture.notes);
     }
   }, [lecture]);
 
@@ -79,14 +81,46 @@ const LectureTab = () => {
     }
   };
 
+  const pdfFileChangeHandler = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      setMediaProgress(true);
+      try {
+        const res = await axios.post(`${MEDIA_API}/upload-pdf`, formData, {
+          onUploadProgress: ({ loaded, total }) => {
+            setUploadProgress(Math.round((loaded * 100) / total));
+          },
+        });
+
+        if (res.data.success) {
+          setUploadPdfInfo({
+            pdfUrl: res.data.data.secure_url,
+            publicId: res.data.data.public_id,
+            fileName: file.name,
+          });
+          toast.success(res.data.message);
+        }
+      } catch (error) {
+        toast.error("PDF upload failed");
+      } finally {
+        setMediaProgress(false);
+      }
+    }
+  };
+
   const editLectureHandler = async () => {
     await editLecture({
       lectureTitle,
       videoInfo: uploadVideoInfo,
+      notesInfo: uploadPdfInfo, // ✅ include PDF info here
       isPreviewFree: isFree,
       courseId,
       lectureId,
+
     });
+
   };
 
   const removeLectureHandler = async () => {
@@ -166,6 +200,21 @@ const LectureTab = () => {
           )}
         </div>
 
+        <div className="mt-4">
+          <Label className="text-gray-800 dark:text-gray-200">Notes (PDF)</Label>
+          <Input
+            type="file"
+            accept="application/pdf"
+            onChange={pdfFileChangeHandler}
+            className="w-fit mt-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+          />
+          {uploadPdfInfo && (
+            <p className="text-xs mt-1 text-green-600 dark:text-green-400">
+              PDF uploaded successfully
+            </p>
+          )}
+        </div>
+
         <div className="flex items-center space-x-2">
           <Switch
             checked={isFree}
@@ -173,13 +222,20 @@ const LectureTab = () => {
             id="is-free"
             className="data-[state=checked]:bg-teal-600"
           />
-          <Label htmlFor="is-free" className="text-gray-800 dark:text-gray-200">Is this video FREE</Label>
+          <Label htmlFor="is-free" className="text-gray-800 dark:text-gray-200">
+            Is this video FREE
+          </Label>
         </div>
 
         {mediaProgress && (
           <div>
-            <Progress value={uploadProgress} className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-teal-600 dark:[&>div]:bg-teal-500" />
-            <p className="text-sm mt-1 text-gray-600 dark:text-gray-400">{uploadProgress}% uploaded</p>
+            <Progress
+              value={uploadProgress}
+              className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-teal-600 dark:[&>div]:bg-teal-500"
+            />
+            <p className="text-sm mt-1 text-gray-600 dark:text-gray-400">
+              {uploadProgress}% uploaded
+            </p>
           </div>
         )}
 

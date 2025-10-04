@@ -34,3 +34,24 @@ export const deleteVideoFromCloudinary = async (publicId) => {
         
     }
 }
+
+export const uploadPDF = async (filePath) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      resource_type: "raw", // important for PDF / docs
+      folder: "lms/notes", // optional folder
+    });
+    return result; // contains secure_url, public_id
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const deletePDFFromCloudinary = async (publicId) => {
+  try {
+    await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
+  } catch (error) {
+    console.log(error);
+  }
+};

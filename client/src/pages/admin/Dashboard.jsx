@@ -1,7 +1,12 @@
 // Dashboard Component
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 import {
   BarChart,
   Bar,
@@ -15,12 +20,19 @@ import {
   Legend,
 } from "recharts";
 import { Loader2 } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Dashboard = () => {
   const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery();
-  const [chartType, setChartType] = useState("bar"); // bar | line
+  const [chartType, setChartType] = useState("bar"); // "bar" | "line"
 
+  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full text-lg font-semibold text-gray-800 dark:text-gray-200">
@@ -30,6 +42,7 @@ const Dashboard = () => {
     );
   }
 
+  // Error state
   if (isError) {
     return (
       <div className="flex justify-center items-center h-full text-red-500 text-lg font-semibold dark:text-red-400">
@@ -67,6 +80,7 @@ const Dashboard = () => {
     (acc, element) => acc + (element.amount || 0),
     0
   );
+
   const totalSales = purchasedCourse.length;
   const uniqueCourses = Object.keys(courseStats).length;
 
@@ -134,16 +148,29 @@ const Dashboard = () => {
         </CardHeader>
 
         <CardContent>
-          <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={500}>
             {chartType === "bar" ? (
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
                 <XAxis
                   dataKey="name"
                   stroke="#374151"
                   interval={0}
-                  angle={-20}
-                  textAnchor="end"
+                  angle={0} // horizontal labels
+                  textAnchor="middle"
+                  tick={({ x, y, payload }) => (
+                    <text
+                      x={x}
+                      y={y + 10}
+                      textAnchor="middle"
+                      fill="#374151"
+                      fontSize={12}
+                    >
+                      {payload.value.length > 15
+                        ? payload.value.substring(0, 12) + "..."
+                        : payload.value}
+                    </text>
+                  )}
                 />
                 <YAxis stroke="#374151" />
                 <Tooltip
@@ -161,14 +188,27 @@ const Dashboard = () => {
                 <Bar dataKey="revenue" fill="#0f766e" name="Revenue" />
               </BarChart>
             ) : (
-              <LineChart data={chartData}>
+              <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
                 <XAxis
                   dataKey="name"
                   stroke="#374151"
                   interval={0}
-                  angle={-20}
-                  textAnchor="end"
+                  angle={0} // horizontal labels
+                  textAnchor="middle"
+                  tick={({ x, y, payload }) => (
+                    <text
+                      x={x}
+                      y={y + 10}
+                      textAnchor="middle"
+                      fill="#374151"
+                      fontSize={12}
+                    >
+                      {payload.value.length > 15
+                        ? payload.value.substring(0, 12) + "..."
+                        : payload.value}
+                    </text>
+                  )}
                 />
                 <YAxis stroke="#374151" />
                 <Tooltip

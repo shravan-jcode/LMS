@@ -57,7 +57,12 @@ const Profile = () => {
     }
   }, [isSuccess, isError, error, refetch]);
 
-  if (isLoading) return <h1 className="text-center text-lg text-gray-900 dark:text-gray-100">Loading Profile...</h1>;
+  if (isLoading)
+    return (
+      <h1 className="text-center text-lg text-gray-900 dark:text-gray-100">
+        Loading Profile...
+      </h1>
+    );
 
   const user = data?.user;
 
@@ -79,7 +84,9 @@ const Profile = () => {
               src={user?.photoUrl || "https://github.com/shadcn.png"}
               alt={user?.name || "user"}
             />
-            <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">{user?.name?.charAt(0) || "U"}</AvatarFallback>
+            <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+              {user?.name?.charAt(0) || "U"}
+            </AvatarFallback>
           </Avatar>
         </div>
 
@@ -87,15 +94,21 @@ const Profile = () => {
         <div className="flex-1 space-y-4">
           <p className="text-gray-900 dark:text-gray-100 text-lg">
             <span className="font-semibold">Name: </span>
-            <span className="font-normal text-gray-700 dark:text-gray-300">{user?.name}</span>
+            <span className="font-normal text-gray-700 dark:text-gray-300">
+              {user?.name}
+            </span>
           </p>
           <p className="text-gray-900 dark:text-gray-100 text-lg">
             <span className="font-semibold">Email: </span>
-            <span className="font-normal text-gray-700 dark:text-gray-300">{user?.email}</span>
+            <span className="font-normal text-gray-700 dark:text-gray-300">
+              {user?.email}
+            </span>
           </p>
           <p className="text-gray-900 dark:text-gray-100 text-lg">
             <span className="font-semibold">Role: </span>
-            <span className="font-normal text-gray-700 dark:text-gray-300">{user?.role?.toUpperCase()}</span>
+            <span className="font-normal text-gray-700 dark:text-gray-300">
+              {user?.role?.toUpperCase()}
+            </span>
           </p>
 
           {/* Edit Profile Dialog */}
@@ -110,14 +123,21 @@ const Profile = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md bg-white dark:bg-gray-950/90 rounded-2xl border-gray-200 dark:border-gray-800">
               <DialogHeader>
-                <DialogTitle className="text-teal-600 dark:text-teal-400">Edit Profile</DialogTitle>
+                <DialogTitle className="text-teal-600 dark:text-teal-400">
+                  Edit Profile
+                </DialogTitle>
                 <DialogDescription className="text-gray-500 dark:text-gray-400">
                   Update your personal details below and save changes.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-gray-900 dark:text-gray-300">Name</Label>
+                  <Label
+                    htmlFor="name"
+                    className="text-gray-900 dark:text-gray-300"
+                  >
+                    Name
+                  </Label>
                   <Input
                     id="name"
                     type="text"
@@ -128,7 +148,12 @@ const Profile = () => {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="photo" className="text-gray-900 dark:text-gray-300">Profile Photo</Label>
+                  <Label
+                    htmlFor="photo"
+                    className="text-gray-900 dark:text-gray-300"
+                  >
+                    Profile Photo
+                  </Label>
                   <Input
                     id="photo"
                     onChange={onChangeHandler}
@@ -159,23 +184,25 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Enrolled Courses */}
-      <div className="mt-10">
-        <h2 className="font-bold text-2xl text-gray-900 dark:text-gray-100 mb-6">
-          Courses You're Enrolled In
-        </h2>
-        {user?.enrolledCourses?.length === 0 ? (
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            You haven't enrolled in any course yet.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {user.enrolledCourses.map((course) => (
-              <Course key={course._id} course={course} />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Enrolled Courses - Only show if role is student */}
+      {user?.role === "student" && (
+        <div className="mt-10">
+          <h2 className="font-bold text-2xl text-gray-900 dark:text-gray-100 mb-6">
+            Courses You're Enrolled In
+          </h2>
+          {user?.enrolledCourses?.length === 0 ? (
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              You haven't enrolled in any course yet.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {user.enrolledCourses.map((course) => (
+                <Course key={course._id} course={course} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

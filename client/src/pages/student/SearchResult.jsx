@@ -28,7 +28,7 @@ const SearchResult = ({ course }) => {
         </div>
       </Link>
       <div className="mt-4 md:mt-0 md:text-right w-full md:w-auto flex-shrink-0 self-center md:self-auto">
-        <h1 className="font-extrabold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">
+        <h1 className="font-extrabold text-2xl bg-clip-text  bg-gradient-to-r text-teal-600 dark:text-teal-400">
           ₹{course.coursePrice}
         </h1>
       </div>

@@ -48,7 +48,9 @@ const CourseTable = () => {
       {/* Table Section */}
       <div className="rounded-lg border border-gray-200 dark:border-gray-800 shadow-md overflow-hidden bg-white dark:bg-gray-900">
         {data?.courses?.length === 0 ? (
-          <p className="p-6 text-center text-gray-600 dark:text-gray-400">You haven't created any courses yet.</p>
+          <p className="p-6 text-center text-gray-600 dark:text-gray-400">
+            You haven't created any courses yet.
+          </p>
         ) : (
           <Table>
             <TableCaption className="text-gray-600 dark:text-gray-400">
@@ -56,10 +58,18 @@ const CourseTable = () => {
             </TableCaption>
             <TableHeader className="bg-gray-100 dark:bg-gray-800">
               <TableRow>
-                <TableHead className="text-gray-700 dark:text-gray-300">Title</TableHead>
-                <TableHead className="w-[120px] text-gray-700 dark:text-gray-300">Price (₹)</TableHead>
-                <TableHead className="text-gray-700 dark:text-gray-300">Status</TableHead>
-                <TableHead className="text-right text-gray-700 dark:text-gray-300">Action</TableHead>
+                <TableHead className="text-gray-700 dark:text-gray-300">
+                  Title
+                </TableHead>
+                <TableHead className="w-[120px] text-gray-700 dark:text-gray-300">
+                  Price (₹)
+                </TableHead>
+                <TableHead className="text-gray-700 dark:text-gray-300">
+                  Status
+                </TableHead>
+                <TableHead className="text-right text-gray-700 dark:text-gray-300">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -85,7 +95,8 @@ const CourseTable = () => {
                       {course.isPublished ? "Published" : "Draft"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right flex gap-2 justify-end">
+                    {/* Edit Course Button */}
                     <Button
                       size="sm"
                       variant="ghost"
@@ -93,6 +104,18 @@ const CourseTable = () => {
                       className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                       <Edit className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                    </Button>
+
+                    {/* Enrolled Users Button */}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() =>
+                        navigate(`/admin/course/${course._id}/enrolled-users`)
+                      }
+                      className="hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      Enrolled Users
                     </Button>
                   </TableCell>
                 </TableRow>

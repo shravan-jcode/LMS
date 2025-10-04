@@ -19,7 +19,7 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "./ui/sheet";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
@@ -68,32 +68,51 @@ const Navbar = () => {
                   <AvatarFallback>U</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent className="w-56 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <DropdownMenuLabel className="font-semibold text-teal-600 dark:text-teal-400">
                   My Account
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
                 <DropdownMenuGroup>
+                  {/* Hide My Learning if user is instructor */}
+                  {user?.role !== "instructor" && (
+                    <DropdownMenuItem>
+                      <Link
+                        to="my-learning"
+                        className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition"
+                      >
+                        My Learning
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem>
-                    <Link to="my-learning" className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition">
-                      My Learning
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to="profile" className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition">
+                    <Link
+                      to="profile"
+                      className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition"
+                    >
                       Edit Profile
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logoutHandler} className="text-gray-800 dark:text-gray-200 hover:text-red-500 transition cursor-pointer">
+
+                  <DropdownMenuItem
+                    onClick={logoutHandler}
+                    className="text-gray-800 dark:text-gray-200 hover:text-red-500 transition cursor-pointer"
+                  >
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
+                {/* Instructor Dashboard */}
                 {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
                     <DropdownMenuItem>
-                      <Link to="/admin/dashboard" className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition">
+                      <Link
+                        to="/admin/dashboard"
+                        className="w-full text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition"
+                      >
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
@@ -146,6 +165,7 @@ const MobileNavbar = ({ user }) => {
 
   const handleLogoutAndClose = async () => {
     await logoutUser();
+    toast.success("User logged out.");
     navigate("/login");
   };
 
@@ -176,14 +196,18 @@ const MobileNavbar = ({ user }) => {
 
         {/* Navigation Links */}
         <nav className="flex flex-col space-y-4 text-lg font-medium flex-1">
-          <SheetClose asChild>
-            <Link
-              to="/my-learning"
-              className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition py-2"
-            >
-              My Learning
-            </Link>
-          </SheetClose>
+          {/* Hide My Learning if user is instructor */}
+          {user?.role !== "instructor" && (
+            <SheetClose asChild>
+              <Link
+                to="/my-learning"
+                className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition py-2"
+              >
+                My Learning
+              </Link>
+            </SheetClose>
+          )}
+
           <SheetClose asChild>
             <Link
               to="/profile"
@@ -192,6 +216,7 @@ const MobileNavbar = ({ user }) => {
               Edit Profile
             </Link>
           </SheetClose>
+
           <SheetClose asChild>
             <button
               onClick={handleLogoutAndClose}
@@ -205,8 +230,11 @@ const MobileNavbar = ({ user }) => {
         {/* Instructor Dashboard */}
         {user?.role === "instructor" && (
           <SheetClose asChild>
-            <Button className="w-full rounded-full bg-teal-600 text-white hover:bg-teal-700 transition shadow-sm hover:shadow-md mt-auto">
-              Dashboard
+            <Button
+              asChild
+              className="w-full rounded-full bg-teal-600 text-white hover:bg-teal-700 transition shadow-sm hover:shadow-md mt-auto"
+            >
+              <Link to="/admin/dashboard">Dashboard</Link>
             </Button>
           </SheetClose>
         )}

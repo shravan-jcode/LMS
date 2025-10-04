@@ -22,6 +22,7 @@ import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
   usePublishCourseMutation,
+  useRemoveCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -41,10 +42,12 @@ const CourseTab = () => {
 
   const params = useParams();
   const courseId = params.courseId;
+
   const { data: courseByIdData, isLoading: courseByIdLoading, refetch } =
     useGetCourseByIdQuery(courseId);
 
   const [publishCourse] = usePublishCourseMutation();
+  const [removeCourse] = useRemoveCourseMutation(); // ✅ moved here (fix)
 
   useEffect(() => {
     if (courseByIdData?.course) {
@@ -129,10 +132,25 @@ const CourseTab = () => {
   if (courseByIdLoading) {
     return (
       <div className="flex justify-center items-center h-full text-lg text-gray-800 dark:text-gray-200">
-        <Loader2 className="mr-2 h-6 w-6 animate-spin" /> Loading course details...
+        <Loader2 className="mr-2 h-6 w-6 animate-spin" /> Loading course
+        details...
       </div>
     );
   }
+
+  const removeCourseHandler = async () => {
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      try {
+        const response = await removeCourse(courseId);
+        if (response.data) {
+          toast.success(response.data.message);
+          navigate("/admin/course"); // redirect after deletion
+        }
+      } catch {
+        toast.error("Failed to delete course");
+      }
+    }
+  };
 
   return (
     <Card className="shadow-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/50">
@@ -161,11 +179,13 @@ const CourseTab = () => {
           <Button
             variant="destructive"
             className="bg-red-600 hover:bg-red-700 text-white"
+            onClick={removeCourseHandler}
           >
             Remove Course
           </Button>
         </div>
       </CardHeader>
+
       <CardContent className="space-y-6">
         {/* Title */}
         <div>
@@ -210,30 +230,37 @@ const CourseTab = () => {
               <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                 <SelectGroup>
                   <SelectLabel className="text-gray-500 dark:text-gray-400">Category</SelectLabel>
-                  <SelectItem value="Next JS">Next JS</SelectItem>
-                  <SelectItem value="Data Science">Data Science</SelectItem>
-                  <SelectItem value="Frontend Development">Frontend Development</SelectItem>
-                  <SelectItem value="Fullstack Development">Fullstack Development</SelectItem>
-                  <SelectItem value="MERN Stack Development">MERN Stack Development</SelectItem>
-                  <SelectItem value="Javascript">Javascript</SelectItem>
-                  <SelectItem value="Python">Python</SelectItem>
-                  <SelectItem value="Docker">Docker</SelectItem>
-                  <SelectItem value="MongoDB">MongoDB</SelectItem>
-                  <SelectItem value="HTML">HTML</SelectItem>
+                  <SelectItem value="Programming Languages">Programming Languages</SelectItem>
+                  <SelectItem value="Web Development">Web Development</SelectItem>
+                  <SelectItem value="Mobile App Development">Mobile App Development</SelectItem>
+                  <SelectItem value="Data Science & AI">Data Science & AI</SelectItem>
+                  <SelectItem value="Cloud Computing & DevOps">Cloud Computing & DevOps</SelectItem>
+                  <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                  <SelectItem value="Database & Big Data">Database & Big Data</SelectItem>
+                  <SelectItem value="Software Development Tools">Software Development Tools</SelectItem>
+                  <SelectItem value="Blockchain & Web3">Blockchain & Web3</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
 
+
           <div>
-            <Label className="text-gray-800 dark:text-gray-200">Course Level</Label>
-            <Select value={input.courseLevel} onValueChange={selectCourseLevel}>
+            <Label className="text-gray-800 dark:text-gray-200">
+              Course Level
+            </Label>
+            <Select
+              value={input.courseLevel}
+              onValueChange={selectCourseLevel}
+            >
               <SelectTrigger className="mt-2 w-full dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
                 <SelectValue placeholder="Select a level" />
               </SelectTrigger>
               <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                 <SelectGroup>
-                  <SelectLabel className="text-gray-500 dark:text-gray-400">Course Level</SelectLabel>
+                  <SelectLabel className="text-gray-500 dark:text-gray-400">
+                    Course Level
+                  </SelectLabel>
                   <SelectItem value="Beginner">Beginner</SelectItem>
                   <SelectItem value="Medium">Medium</SelectItem>
                   <SelectItem value="Advance">Advance</SelectItem>
@@ -243,7 +270,9 @@ const CourseTab = () => {
           </div>
 
           <div>
-            <Label className="text-gray-800 dark:text-gray-200">Price (INR)</Label>
+            <Label className="text-gray-800 dark:text-gray-200">
+              Price (INR)
+            </Label>
             <Input
               type="number"
               name="coursePrice"
@@ -257,7 +286,9 @@ const CourseTab = () => {
 
         {/* Thumbnail */}
         <div>
-          <Label className="text-gray-800 dark:text-gray-200">Course Thumbnail</Label>
+          <Label className="text-gray-800 dark:text-gray-200">
+            Course Thumbnail
+          </Label>
           <Input
             type="file"
             onChange={selectThumbnail}

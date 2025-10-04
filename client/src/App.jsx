@@ -24,6 +24,8 @@ import {
 } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
+import EnrolledUsers from "./pages/admin/EnrolledUsers";
+import Footer from "./components/Footer";
 
 const appRouter = createBrowserRouter([
   {
@@ -36,6 +38,7 @@ const appRouter = createBrowserRouter([
           <>
             <HeroSection />
             <Courses />
+            <Footer/>
           </>
         ),
       },
@@ -123,6 +126,10 @@ const appRouter = createBrowserRouter([
             path: "course/:courseId/lecture/:lectureId",
             element: <EditLecture />,
           },
+          {
+  path: "course/:courseId/enrolled-users",
+  element: <EnrolledUsers />,
+}
         ],
       },
     ],

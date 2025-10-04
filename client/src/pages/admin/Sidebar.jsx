@@ -1,4 +1,3 @@
-// Sidebar Component
 import { ChartNoAxesColumn, SquareLibrary } from "lucide-react";
 import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -22,11 +21,9 @@ const Sidebar = () => {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 
-                  ${
-                    isActive
-                      ? "bg-teal-600 dark:bg-teal-500 text-white dark:text-gray-900 shadow-lg"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-teal-600 dark:hover:text-teal-400"
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${isActive
+                    ? "bg-teal-600 dark:bg-teal-500 text-white dark:text-gray-900 shadow-lg"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-teal-600 dark:hover:text-teal-400"
                   }`}
               >
                 {item.icon}

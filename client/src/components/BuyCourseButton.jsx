@@ -67,16 +67,16 @@ const BuyCourseButton = ({ courseId }) => {
       disabled={isLoading}
       onClick={purchaseCourseHandler}
       className="
-        w-full rounded-2xl px-8 py-3 
-        bg-gradient-to-r from-teal-600 to-cyan-600
-        hover:from-teal-700 hover:to-cyan-700
-        text-white font-semibold text-lg shadow-lg
-        transform transition-all duration-300 ease-in-out hover:scale-105
-        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-        dark:from-teal-500 dark:to-cyan-500 
-        dark:hover:from-teal-600 dark:hover:to-cyan-600
-        focus-visible:ring-2 focus-visible:ring-teal-400
-      "
+    w-full rounded-2xl px-8 py-3 
+    bg-gradient-to-r from-orange-500 to-amber-500
+    hover:from-orange-600 hover:to-amber-600
+    text-white font-semibold text-lg shadow-lg
+    transform transition-all duration-300 ease-in-out hover:scale-105
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+    dark:from-orange-400 dark:to-amber-400 
+    dark:hover:from-orange-500 dark:hover:to-amber-500
+    focus-visible:ring-2 focus-visible:ring-orange-400
+  "
     >
       {isLoading ? (
         <>
@@ -86,6 +86,7 @@ const BuyCourseButton = ({ courseId }) => {
         "💳 Purchase Course"
       )}
     </Button>
+
   );
 };
 

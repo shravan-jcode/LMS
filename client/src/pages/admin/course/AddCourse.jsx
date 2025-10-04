@@ -77,6 +77,7 @@ const AddCourse = () => {
         </div>
 
         {/* Category */}
+        {/* Category */}
         <div>
           <Label htmlFor="category" className="text-gray-800 dark:text-gray-200 font-medium">Category</Label>
           <Select onValueChange={getSelectedCategory} value={category}>
@@ -86,20 +87,20 @@ const AddCourse = () => {
             <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
               <SelectGroup>
                 <SelectLabel className="text-gray-500 dark:text-gray-400">Category</SelectLabel>
-                <SelectItem value="Next JS" className="hover:bg-gray-100 dark:hover:bg-gray-700">Next JS</SelectItem>
-                <SelectItem value="Data Science" className="hover:bg-gray-100 dark:hover:bg-gray-700">Data Science</SelectItem>
-                <SelectItem value="Frontend Development" className="hover:bg-gray-100 dark:hover:bg-gray-700">Frontend Development</SelectItem>
-                <SelectItem value="Fullstack Development" className="hover:bg-gray-100 dark:hover:bg-gray-700">Fullstack Development</SelectItem>
-                <SelectItem value="MERN Stack Development" className="hover:bg-gray-100 dark:hover:bg-gray-700">MERN Stack Development</SelectItem>
-                <SelectItem value="Javascript" className="hover:bg-gray-100 dark:hover:bg-gray-700">Javascript</SelectItem>
-                <SelectItem value="Python" className="hover:bg-gray-100 dark:hover:bg-gray-700">Python</SelectItem>
-                <SelectItem value="Docker" className="hover:bg-gray-100 dark:hover:bg-gray-700">Docker</SelectItem>
-                <SelectItem value="MongoDB" className="hover:bg-gray-100 dark:hover:bg-gray-700">MongoDB</SelectItem>
-                <SelectItem value="HTML" className="hover:bg-gray-100 dark:hover:bg-gray-700">HTML</SelectItem>
+                <SelectItem value="Programming Languages">Programming Languages</SelectItem>
+                <SelectItem value="Web Development">Web Development</SelectItem>
+                <SelectItem value="Mobile App Development">Mobile App Development</SelectItem>
+                <SelectItem value="Data Science & AI">Data Science & AI</SelectItem>
+                <SelectItem value="Cloud Computing & DevOps">Cloud Computing & DevOps</SelectItem>
+                <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                <SelectItem value="Database & Big Data">Database & Big Data</SelectItem>
+                <SelectItem value="Software Development Tools">Software Development Tools</SelectItem>
+                <SelectItem value="Blockchain & Web3">Blockchain & Web3</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
+
 
         {/* Action Buttons */}
         <div className="flex items-center justify-end gap-3 pt-4">
