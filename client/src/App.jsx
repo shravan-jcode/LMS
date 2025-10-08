@@ -26,6 +26,7 @@ import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRo
 import { ThemeProvider } from "./components/ThemeProvider";
 import EnrolledUsers from "./pages/admin/EnrolledUsers";
 import Footer from "./components/Footer";
+import InstructoLogin from "./pages/InstructorLogin";
 
 const appRouter = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ const appRouter = createBrowserRouter([
           <>
             <HeroSection />
             <Courses />
-            <Footer/>
+            <Footer />
           </>
         ),
       },
@@ -47,6 +48,14 @@ const appRouter = createBrowserRouter([
         element: (
           <AuthenticatedUser>
             <Login />
+          </AuthenticatedUser>
+        ),
+      },
+      {
+        path: "instructor/signup",   // this path matches your footer link
+        element: (
+          <AuthenticatedUser>
+            <InstructoLogin />
           </AuthenticatedUser>
         ),
       },
@@ -127,9 +136,9 @@ const appRouter = createBrowserRouter([
             element: <EditLecture />,
           },
           {
-  path: "course/:courseId/enrolled-users",
-  element: <EnrolledUsers />,
-}
+            path: "course/:courseId/enrolled-users",
+            element: <EnrolledUsers />,
+          }
         ],
       },
     ],
