@@ -71,7 +71,6 @@ const CourseProgress = () => {
   const handleInCompleteCourse = async () => await inCompleteCourse(courseId);
 
   const handleDownloadCertificate = () => {
-    // Opens a new tab to download PDF
     window.open(`http://localhost:8080/api/v1/certificate/${courseId}`, "_blank");
   };
 
@@ -83,7 +82,6 @@ const CourseProgress = () => {
           {courseTitle}
         </h1>
         <div className="flex flex-col md:flex-row gap-3">
-          {/* Mark Complete / Incomplete */}
           <Button
             onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
             variant={completed ? "outline" : "default"}
@@ -133,6 +131,7 @@ const CourseProgress = () => {
             ) + 1}{" "}
             : {currentLecture?.lectureTitle || initialLecture.lectureTitle}
           </h2>
+
           {(currentLecture?.notes?.pdfUrl || initialLecture?.notes?.pdfUrl) && (
             <div className="mt-4">
               <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -140,33 +139,23 @@ const CourseProgress = () => {
               </h3>
               <div className="flex gap-3">
                 <Button
-                  onClick={() =>
-                    window.open(
-                      currentLecture?.notes?.pdfUrl || initialLecture?.notes?.pdfUrl,
-                      "_blank"
-                    )
-                  }
-                  className="bg-teal-600 hover:bg-teal-700 text-white"
-                >
-                  View Notes
-                </Button>
-                <Button
                   onClick={() => {
                     const link = document.createElement("a");
-                    link.href = currentLecture?.notes?.pdfUrl || initialLecture?.notes?.pdfUrl;
+                    link.href =
+                      currentLecture?.notes?.pdfUrl || initialLecture?.notes?.pdfUrl;
                     link.download =
-                      currentLecture?.notes?.fileName || initialLecture?.notes?.fileName || "notes.pdf";
+                      currentLecture?.notes?.fileName ||
+                      initialLecture?.notes?.fileName ||
+                      "notes.pdf";
                     link.click();
                   }}
-                  variant="outline"
-                  className="border-teal-600 text-teal-600 hover:bg-teal-50 dark:border-teal-400 dark:text-teal-400"
+                  className="bg-teal-600 hover:bg-teal-700 text-white"
                 >
                   Download Notes
                 </Button>
               </div>
             </div>
           )}
-
         </div>
 
         {/* Lecture Sidebar */}

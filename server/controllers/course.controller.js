@@ -286,20 +286,20 @@ export const getCourseById = async (req, res) => {
     const { courseId } = req.params;
     const userId = req.id;
 
-    // check if the user has purchased the course
-    const purchased = await CoursePurchase.findOne({ courseId, userId, status: "completed" });
-    if (!purchased) {
-      return res.status(403).json({
-        message: "You have not purchased this course.",
-        success: false,
-      });
-    }
-
     const course = await Course.findById(courseId).populate("lectures");
     if (!course) {
-      return res.status(404).json({
-        message: "Course not found!",
-      });
+      return res.status(404).json({ message: "Course not found!" });
+    }
+
+    // Allow access if user is instructor or purchased the course
+    if (course.creator.toString() !== userId) {
+      const purchased = await CoursePurchase.findOne({ courseId, userId, status: "completed" });
+      if (!purchased) {
+        return res.status(403).json({
+          message: "You have not purchased this course.",
+          success: false,
+        });
+      }
     }
 
     return res.status(200).json({ course });
@@ -308,6 +308,7 @@ export const getCourseById = async (req, res) => {
     return res.status(500).json({ message: "Failed to get course by id" });
   }
 };
+
 
 export const createLecture = async (req, res) => {
     try {
@@ -346,14 +347,17 @@ export const getCourseLecture = async (req, res) => {
     const { courseId } = req.params;
     const userId = req.id;
 
-    const purchased = await CoursePurchase.findOne({ courseId, userId, status: "completed" });
-    if (!purchased) {
-      return res.status(403).json({ message: "You have not purchased this course." });
-    }
-
     const course = await Course.findById(courseId).populate("lectures");
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Allow access if user is instructor or purchased the course
+    if (course.creator.toString() !== userId) {
+      const purchased = await CoursePurchase.findOne({ courseId, userId, status: "completed" });
+      if (!purchased) {
+        return res.status(403).json({ message: "You have not purchased this course." });
+      }
     }
 
     return res.status(200).json({ lectures: course.lectures });
@@ -362,6 +366,7 @@ export const getCourseLecture = async (req, res) => {
     return res.status(500).json({ message: "Failed to get lectures" });
   }
 };
+
 
 export const editLecture = async (req, res) => {
     try {
