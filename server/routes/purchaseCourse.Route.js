@@ -1,10 +1,10 @@
 import express from "express";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
-import { 
-  createCheckoutSession, 
-  getAllPurchasedCourse, 
-  getCourseDetailWithPurchaseStatus, 
-  verifyPayment 
+import {
+  createCheckoutSession,
+  getAllPurchasedCourse,
+  getCourseDetailWithPurchaseStatus,
+  verifyPayment
 } from "../controllers/coursePurchase.controller.js";
 
 const router = express.Router();
@@ -13,7 +13,7 @@ const router = express.Router();
 router.route("/checkout/create-checkout-session").post(isAuthenticated, createCheckoutSession);
 
 // Verify Razorpay payment
-router.route("/checkout/verify-payment").post(isAuthenticated, verifyPayment); 
+router.route("/checkout/verify-payment").post(isAuthenticated, verifyPayment);
 
 // Get course details + purchase status
 router.route("/course/:courseId/detail-with-status").get(isAuthenticated, getCourseDetailWithPurchaseStatus);
